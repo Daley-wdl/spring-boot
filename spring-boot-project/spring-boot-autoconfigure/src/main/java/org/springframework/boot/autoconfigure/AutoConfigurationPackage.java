@@ -26,6 +26,8 @@ import java.lang.annotation.Target;
 import org.springframework.context.annotation.Import;
 
 /**
+ * @AutoConfigurationPackage 注解，主要功能自动配置包，它会获取主程序类所在的包路径，并将包路径（包括子包）下的所有组件注册到 Spring IOC 容器中
+ *
  * Registers packages with {@link AutoConfigurationPackages}. When no {@link #basePackages
  * base packages} or {@link #basePackageClasses base package classes} are specified, the
  * package of the annotated class is registered.

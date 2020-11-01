@@ -80,6 +80,8 @@ public abstract class AutoConfigurationPackages {
 	}
 
 	/**
+	 * 注册一个用于存储报名（package）的 Bean 到 Spring IoC 容器中
+	 *
 	 * Programmatically registers the auto-configuration package names. Subsequent
 	 * invocations will add the given package names to those that have already been
 	 * registered. You can use this method to manually define the base packages that will
@@ -91,16 +93,20 @@ public abstract class AutoConfigurationPackages {
 	 * @param packageNames the package names to set
 	 */
 	public static void register(BeanDefinitionRegistry registry, String... packageNames) {
+		// 如果已经存在该 BEAN ，则修改其包（package）属性
 		if (registry.containsBeanDefinition(BEAN)) {
 			BasePackagesBeanDefinition beanDefinition = (BasePackagesBeanDefinition) registry.getBeanDefinition(BEAN);
 			beanDefinition.addBasePackages(packageNames);
 		}
 		else {
+			// 如果不存在该 BEAN ，则创建一个 Bean ，并进行注册
 			registry.registerBeanDefinition(BEAN, new BasePackagesBeanDefinition(packageNames));
 		}
 	}
 
 	/**
+	 * 内部类，用于获得包名
+	 *
 	 * {@link ImportBeanDefinitionRegistrar} to store the base package from the importing
 	 * configuration.
 	 */

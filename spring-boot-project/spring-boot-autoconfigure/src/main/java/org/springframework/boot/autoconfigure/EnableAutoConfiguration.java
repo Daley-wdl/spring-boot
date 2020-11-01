@@ -34,6 +34,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.support.SpringFactoriesLoader;
 
 /**
+ * @EnableAutoConfiguration 注解，用于开启自动配置功能，是 spring-boot-autoconfigure 项目最核心的注解
+ *
  * Enable auto-configuration of the Spring Application Context, attempting to guess and
  * configure beans that you are likely to need. Auto-configuration classes are usually
  * applied based on your classpath and what beans you have defined. For example, if you
@@ -79,7 +81,9 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+// 主要功能自动配置包，它会获取主程序类所在的包路径，并将包路径（包括子包）下的所有组件注册到 Spring IOC 容器中
 @AutoConfigurationPackage
+// 导入自动配置相关的资源
 @Import(AutoConfigurationImportSelector.class)
 public @interface EnableAutoConfiguration {
 
