@@ -29,6 +29,21 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 该类是 Spring Boot 实现 Condition 的抽象类，且是 Spring Boot 所有 Condition 实现类的基类。
+ * 分别对应如下注解：
+ * 	@ConditionalOnBean：当容器里有指定 Bean 的条件下。
+ * 	@ConditionalOnMissingBean：当容器里没有指定 Bean 的情况下。
+ * 	@ConditionalOnSingleCandidate：当指定 Bean 在容器中只有一个，或者虽然有多个但是指定首选 Bean 。
+ * 	@ConditionalOnClass：当类路径下有指定类的条件下。
+ * 	@ConditionalOnMissingClass：当类路径下没有指定类的条件下。
+ * 	@ConditionalOnProperty：指定的属性是否有指定的值
+ * 	@ConditionalOnResource：类路径是否有指定的值
+ * 	@ConditionalOnExpression：基于 SpEL 表达式作为判断条件。
+ * 	@ConditionalOnJava：基于 Java 版本作为判断条件
+ * 	@ConditionalOnJndi：在 JNDI 存在的条件下差在指定的位置
+ * 	@ConditionalOnNotWebApplication：当前项目不是 Web 项目的条件下
+ * 	@ConditionalOnWebApplication：当前项目是 Web项 目的条件下。
+ *
  * Base of all {@link Condition} implementations used with Spring Boot. Provides sensible
  * logging to help the user diagnose what classes are loaded.
  *
@@ -42,11 +57,16 @@ public abstract class SpringBootCondition implements Condition {
 
 	@Override
 	public final boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+		// 获得注解的是方法名还是类名
 		String classOrMethodName = getClassOrMethodName(metadata);
 		try {
+			// 条件匹配结果
 			ConditionOutcome outcome = getMatchOutcome(context, metadata);
+			// 打印结果
 			logOutcome(classOrMethodName, outcome);
+			// 记录
 			recordEvaluation(context, classOrMethodName, outcome);
+			// 返回是否匹配
 			return outcome.isMatch();
 		}
 		catch (NoClassDefFoundError ex) {

@@ -83,10 +83,13 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 
 	protected final List<String> filter(Collection<String> classNames, ClassNameFilter classNameFilter,
 			ClassLoader classLoader) {
+		// 如果为空，则返回空结果
 		if (CollectionUtils.isEmpty(classNames)) {
 			return Collections.emptyList();
 		}
+		// 创建 matches 数组
 		List<String> matches = new ArrayList<>(classNames.size());
+		// 遍历 classNames 数组，使用 ClassNameFilter 进行判断，是否匹配。
 		for (String candidate : classNames) {
 			if (classNameFilter.matches(candidate, classLoader)) {
 				matches.add(candidate);
@@ -112,6 +115,9 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 
 	protected enum ClassNameFilter {
 
+		/**
+		 * 指定类存在
+		 */
 		PRESENT {
 
 			@Override
@@ -121,6 +127,9 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 
 		},
 
+		/**
+		 * 指定类不存在
+		 */
 		MISSING {
 
 			@Override
@@ -132,6 +141,7 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 
 		abstract boolean matches(String className, ClassLoader classLoader);
 
+		// 判断是否存在
 		static boolean isPresent(String className, ClassLoader classLoader) {
 			if (classLoader == null) {
 				classLoader = ClassUtils.getDefaultClassLoader();

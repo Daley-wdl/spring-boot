@@ -67,16 +67,19 @@ class OnWebApplicationCondition extends FilteringSpringBootCondition {
 			return null;
 		}
 		ConditionMessage.Builder message = ConditionMessage.forCondition(ConditionalOnWebApplication.class);
+		// 如果要求 SERVLET 类型，结果不存在 SERVLET_WEB_APPLICATION_CLASS 类，返回不匹配
 		if (ConditionalOnWebApplication.Type.SERVLET.name().equals(type)) {
 			if (!ClassNameFilter.isPresent(SERVLET_WEB_APPLICATION_CLASS, getBeanClassLoader())) {
 				return ConditionOutcome.noMatch(message.didNotFind("servlet web application classes").atAll());
 			}
 		}
+		// 如果要求 REACTIVE 类型，结果不存在 REACTIVE_WEB_APPLICATION_CLASS 类，返回不匹配
 		if (ConditionalOnWebApplication.Type.REACTIVE.name().equals(type)) {
 			if (!ClassNameFilter.isPresent(REACTIVE_WEB_APPLICATION_CLASS, getBeanClassLoader())) {
 				return ConditionOutcome.noMatch(message.didNotFind("reactive web application classes").atAll());
 			}
 		}
+		// 如果 SERVLET_WEB_APPLICATION_CLASS 和 REACTIVE_WEB_APPLICATION_CLASS 都不存在，返回不匹配
 		if (!ClassNameFilter.isPresent(SERVLET_WEB_APPLICATION_CLASS, getBeanClassLoader())
 				&& !ClassUtils.isPresent(REACTIVE_WEB_APPLICATION_CLASS, getBeanClassLoader())) {
 			return ConditionOutcome.noMatch(message.didNotFind("reactive or servlet web application classes").atAll());
@@ -86,7 +89,9 @@ class OnWebApplicationCondition extends FilteringSpringBootCondition {
 
 	@Override
 	public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+		// 通过是否有 @ConditionalOnWebApplication 注解，判断是否要求在 Web 环境下
 		boolean required = metadata.isAnnotated(ConditionalOnWebApplication.class.getName());
+		// 判断是否匹配 Web 环境
 		ConditionOutcome outcome = isWebApplication(context, metadata, required);
 		if (required && !outcome.isMatch()) {
 			return ConditionOutcome.noMatch(outcome.getConditionMessage());
